@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/manager_finances
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    initialization-mode: always
+    continue-on-error: true
+  jpa:
+    hibernate:
+      show-sql: true
+      ddl-auto: create
+      database: postgres
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+DEBUG:
+  logging:
+    level:
+      web: true

@@ -27,7 +27,6 @@ public class ItemServiceImpl implements ItemService {
     public Item criaItem(Item itemModel) {
 
 
-
         Categoria categoria = categoriaService.buscaCategoriaPeloTitulo(itemModel.getCategoria().getTitulo());
 
         Item itemCriado = Item.builder()
@@ -42,9 +41,5 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
-    public static void main(String[] args) {
 
-        System.out.println(LocalDate.now());
-
-    }
 }

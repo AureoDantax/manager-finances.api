@@ -1,24 +1,23 @@
 package br.com.managerfinances.api.bean;
 
 
-import br.com.managerfinances.api.repository.CategoriaRepository;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 @Table(name = "ITEM", schema = "api")
-@SuperBuilder
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 public class Item extends BaseEntity {
 
@@ -26,22 +25,14 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank
+    @NotBlank(message = "O nome do item é obrigatorio!")
     private String nome;
 
-    @NotBlank
     @ManyToOne
     private Categoria categoria;
 
-    @NotBlank
+    @NotNull(message = "O valor do item é obrigatorio!")
     private BigDecimal valor;
 
-    @NotBlank
-    private Boolean despesa;
-
-    @Column(name = "sequential_id")
-
-    private Integer sequentialId;
-
-
+    private LocalDate dataRegistro;
 }

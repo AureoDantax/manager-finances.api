@@ -1,13 +1,14 @@
 package br.com.managerfinances.api.controller;
 
 import br.com.managerfinances.api.bean.Item;
-import br.com.managerfinances.api.service.ItemServiceImpl;
-import feign.Headers;
+import br.com.managerfinances.api.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api")
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class ItemController {
 
     @Autowired
-    private ItemServiceImpl service;
+    private ItemService service;
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("/item/create")
@@ -28,5 +29,13 @@ public class ItemController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @GetMapping("/balanco")
+    public BigDecimal buscaValores(){
+        BigDecimal valorBalanco = service.calculaBalanco();
+        return valorBalanco;
+    }
+
 
 }

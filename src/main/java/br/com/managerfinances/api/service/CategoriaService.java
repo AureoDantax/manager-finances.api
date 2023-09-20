@@ -42,8 +42,8 @@ public class CategoriaService {
                 .orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada"));
     }
 
-    public Set<Object> listaCategorias() {
-        Set<Object> categorias = new HashSet<>();
+    public Set<Categoria> listaCategorias() {
+        HashSet<Categoria> categorias = new HashSet<>();
 
         for (Categoria categoria : categoriaRepository.findAll()) {
             categorias.add(categoria);

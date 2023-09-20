@@ -18,7 +18,7 @@ import java.util.Date;
 @SuperBuilder
 @NoArgsConstructor
 public class BaseEntity {
-    public static final Charset CSV_ENCODING = Charset.forName("windows-1252");
+
 
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

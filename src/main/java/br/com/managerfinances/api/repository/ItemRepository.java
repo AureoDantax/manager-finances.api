@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ItemRepository extends CrudRepository<Item, UUID> {
-    Optional<Item> findByNome(String titulo);
+    Optional<Item> findByNome(String nome);
 
 
 }

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ItemService {
@@ -29,7 +31,6 @@ public class ItemService {
 
     public Item criaItem(Item itemModel) {
 
-
         Categoria categoria = categoriaService.buscaCategoriaPeloTitulo(itemModel.getCategoria().getTitulo());
 
         Item itemCriado = Item.builder()
@@ -43,8 +44,8 @@ public class ItemService {
 
     }
 
-    public Item buscaItemPeloTitulo(String titulo) {
-        return itemRepository.findByNome(titulo).orElseThrow(
+    public Item buscaItemPeloNome(String nome) {
+        return itemRepository.findByNome(nome).orElseThrow(
                 () -> new ItemNotFoundException("Item não encontrado, tente uma pesquisa diferente"));
 
     }
@@ -57,7 +58,7 @@ public class ItemService {
     }
 
     private BigDecimal calculaTotalDespesas() {
-        List<Item> itens = new ArrayList();
+        List<Item> itens = new ArrayList<>();
         itemRepository.findAll().forEach(itens::add);
         BigDecimal totalDespesas = itens.stream().filter(item -> item.getCategoria().getDespesa())
                 .map(Item::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -66,10 +67,22 @@ public class ItemService {
 
 
     private BigDecimal calculaTotalReceitas() {
-        List<Item> itens = new ArrayList();
+        List<Item> itens = new ArrayList<>();
         itemRepository.findAll().forEach(itens::add);
         BigDecimal totalReceitas = itens.stream().filter(item -> !item.getCategoria().getDespesa())
                 .map(Item::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
         return totalReceitas;
+    }
+
+    public Set<Object> listaItens() {
+        Set<Object> itens = new HashSet<>();
+
+        for (Item item : itemRepository.findAll()) {
+            itens.add(item);
+
+
+        }
+
+        return itens;
     }
 }

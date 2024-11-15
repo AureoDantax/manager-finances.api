@@ -60,18 +60,16 @@ public class ItemService {
     private BigDecimal calculaTotalDespesas() {
         List<Item> itens = new ArrayList<>();
         itemRepository.findAll().forEach(itens::add);
-        BigDecimal totalDespesas = itens.stream().filter(item -> item.getCategoria().getDespesa())
+        return itens.stream().filter(item -> item.getCategoria().getDespesa())
                 .map(Item::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return totalDespesas;
     }
 
 
     private BigDecimal calculaTotalReceitas() {
         List<Item> itens = new ArrayList<>();
         itemRepository.findAll().forEach(itens::add);
-        BigDecimal totalReceitas = itens.stream().filter(item -> !item.getCategoria().getDespesa())
+        return itens.stream().filter(item -> !item.getCategoria().getDespesa())
                 .map(Item::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return totalReceitas;
     }
 
     public Set<Object> listaItens() {

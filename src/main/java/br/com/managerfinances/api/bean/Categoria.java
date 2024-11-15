@@ -31,7 +31,7 @@ public class Categoria extends BaseEntity {
     @NotBlank(message = "Cor é obrigatória!")
     private String cor;
 
-    @NotNull(message = "É necessário informar se a categoria é uma espesa!")
+    @NotNull(message = "É necessário informar se a categoria é uma despesa!")
     private Boolean despesa;
 
 

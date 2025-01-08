@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ItemService {
@@ -31,11 +28,11 @@ public class ItemService {
 
     public Item criaItem(Item itemModel) {
 
-        Categoria categoria = categoriaService.buscaCategoriaPeloTitulo(itemModel.getCategoria().getTitulo());
+        Optional<Categoria> categoria = categoriaRepository.findById(itemModel.getCategoria().getId());
 
         Item itemCriado = Item.builder()
                 .nome(itemModel.getNome())
-                .categoria(categoria)
+                .categoria(categoria.get())
                 .valor(itemModel.getValor())
                 .dataRegistro(LocalDate.now())
                 .build();

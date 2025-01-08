@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "ITEM", schema = "api")
+@Table( schema = "api")
 @Getter
 @Setter
 @SuperBuilder

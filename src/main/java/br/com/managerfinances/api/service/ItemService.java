@@ -1,10 +1,10 @@
 package br.com.managerfinances.api.service;
 
-import br.com.managerfinances.api.bean.Categoria;
-import br.com.managerfinances.api.bean.Item;
+import br.com.managerfinances.api.bean.Category;
+import br.com.managerfinances.api.bean.Transaction;
 import br.com.managerfinances.api.exception.ItemNotFoundException;
-import br.com.managerfinances.api.repository.CategoriaRepository;
-import br.com.managerfinances.api.repository.ItemRepository;
+import br.com.managerfinances.api.repository.CategoryRepository;
+import br.com.managerfinances.api.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,63 +17,60 @@ public class ItemService {
 
 
     @Autowired
-    ItemRepository itemRepository;
+    TransactionRepository transactionRepository;
 
     @Autowired
-    CategoriaService categoriaService;
-
-    @Autowired
-    CategoriaRepository categoriaRepository;
+    CategoryRepository categoryRepository;
 
 
-    public Item criaItem(Item itemModel) {
+    public Transaction criaItem(Transaction transactionModel) {
 
-        Optional<Categoria> categoria = categoriaRepository.findById(itemModel.getCategoria().getId());
+        Optional<Category> categoria = categoryRepository.findById(transactionModel.getCategory().getId());
 
-        Item itemCriado = Item.builder()
-                .nome(itemModel.getNome())
-                .categoria(categoria.get())
-                .valor(itemModel.getValor())
-                .dataRegistro(LocalDate.now())
+        Transaction transactionCriado = Transaction.builder()
+                .name(transactionModel.getName())
+                .category(categoria.get())
+                .value(transactionModel.getValue())
+                .registerDate(LocalDate.now())
                 .build();
-        itemRepository.save(itemCriado);
-        return itemCriado;
+        transactionRepository.save(transactionCriado);
+        return transactionCriado;
 
     }
 
-    public Item buscaItemPeloNome(String nome) {
-        return itemRepository.findByNome(nome).orElseThrow(
-                () -> new ItemNotFoundException("Item não encontrado, tente uma pesquisa diferente"));
+    public Transaction getransactionByName(String name) {
+        return transactionRepository.findByName(name).orElseThrow(
+                () -> new ItemNotFoundException("Transação não encontrada, tente uma pesquisa diferente"));
 
     }
 
-    public BigDecimal calculaBalanco() {
+    public BigDecimal balanceCalculate() {
 
-        BigDecimal receitas = calculaTotalReceitas();
-        BigDecimal despesas = calculaTotalDespesas();
-        return receitas.subtract(despesas);
+        BigDecimal revenues = getotalRevenues();
+        BigDecimal despesas = getotalExpenses();
+        return revenues.subtract(despesas);
     }
 
-    private BigDecimal calculaTotalDespesas() {
-        List<Item> itens = new ArrayList<>();
-        itemRepository.findAll().forEach(itens::add);
-        return itens.stream().filter(item -> item.getCategoria().getDespesa())
-                .map(Item::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+    private BigDecimal getotalExpenses() {
+        List<Transaction> itens = new ArrayList<>();
+        transactionRepository.findAll().forEach(itens::add);
+        return itens.stream().filter(transaction -> transaction.getCategory().getExpense())
+                .map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 
-    private BigDecimal calculaTotalReceitas() {
-        List<Item> itens = new ArrayList<>();
-        itemRepository.findAll().forEach(itens::add);
-        return itens.stream().filter(item -> !item.getCategoria().getDespesa())
-                .map(Item::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+    private BigDecimal getotalRevenues() {
+        List<Transaction> itens = new ArrayList<>();
+        transactionRepository.findAll().forEach(itens::add);
+        return itens.stream().filter(transaction -> !transaction.getCategory().getExpense())
+                .map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public Set<Object> listaItens() {
+    public Set<Object> getransactions() {
         Set<Object> itens = new HashSet<>();
 
-        for (Item item : itemRepository.findAll()) {
-            itens.add(item);
+        for (Transaction transaction : transactionRepository.findAll()) {
+            itens.add(transaction);
 
 
         }

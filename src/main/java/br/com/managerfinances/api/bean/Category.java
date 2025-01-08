@@ -11,28 +11,28 @@ import lombok.experimental.SuperBuilder;
 import java.util.UUID;
 
 @Entity
-@Table(name = "CATEGORIA", schema = "api")
+@Table(schema = "api")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class Categoria extends BaseEntity {
+public class Category extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @NotBlank(message = "Titulo é obrigatório!")
-    private String titulo;
+    private String name;
 
     @NotBlank(message = "Tag é obrigatória!")
     private String tag;
 
     @NotBlank(message = "Cor é obrigatória!")
-    private String cor;
+    private String color;
 
     @NotNull(message = "É necessário informar se a categoria é uma despesa!")
-    private Boolean despesa;
+    private Boolean expense;
 
 
 

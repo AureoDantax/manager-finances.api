@@ -2,7 +2,7 @@ package br.com.managerfinances.api.controller;
 
 import br.com.managerfinances.api.bean.Transaction;
 import br.com.managerfinances.api.exception.ItemNotFoundException;
-import br.com.managerfinances.api.service.ItemService;
+import br.com.managerfinances.api.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,32 +22,31 @@ import java.util.Set;
 public class TransactionController {
 
     @Autowired
-    private ItemService service;
+    private TransactionService service;
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("/transactions")
     @ResponseBody
     public ResponseEntity<Object> createItemObj(@Valid @RequestBody Transaction transactionModel) {
         try {
-            Transaction transaction = service.criaItem(transactionModel);
+            Transaction transaction = service.createTransaction(transactionModel);
             return ResponseEntity.ok(transaction);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
     @GetMapping("/balance")
-    public BigDecimal buscaValores() throws RuntimeException {
-        return service.balanceCalculate();
+    public ResponseEntity<Map<String,BigDecimal>> getBalance() throws RuntimeException {
+        return ResponseEntity.ok(service.balanceCalculate());
     }
 
     @ResponseStatus(value = HttpStatus.FOUND)
-    @GetMapping("/transactions/{nome}")
-    public ResponseEntity<Transaction> getransactionByName(@PathVariable String nome) throws RuntimeException {
+    @GetMapping("/transactions/{name}")
+    public ResponseEntity<Transaction> getransactionByName(@PathVariable String name) throws RuntimeException {
         try {
 
-            Transaction transaction = service.getransactionByName(nome);
+            Transaction transaction = service.getransactionByName(name);
             return ResponseEntity.of(Optional.of(transaction));
         } catch (Exception e) {
             log.error("Falha ao buscar a transação: ", e);

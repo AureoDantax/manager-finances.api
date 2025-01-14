@@ -19,7 +19,7 @@ public class CategoryService {
 
     public Category createCategory(Category categoryModel) {
         try {
-            Category categoryCriada = Category.builder()
+            Category categoryBuilder = Category.builder()
                     .name(categoryModel.getName())
                     .tag(categoryModel.getTag())
                     .color(categoryModel.getColor())
@@ -29,8 +29,8 @@ public class CategoryService {
                 throw new RuntimeException("Esse tipo de Categoria já existe");
             }
 
-            categoryRepository.save(categoryCriada);
-            return categoryCriada;
+            categoryRepository.save(categoryBuilder);
+            return categoryBuilder;
         } catch (Exception e) {
             throw new BusinessException("Um ou mais dados de categoria invalidos");
         }

@@ -1,7 +1,6 @@
 package br.com.managerfinances.api.controller;
 
-import br.com.managerfinances.api.bean.Categoria;
-import br.com.managerfinances.api.bean.Item;
+import br.com.managerfinances.api.bean.Transaction;
 import br.com.managerfinances.api.exception.ItemNotFoundException;
 import br.com.managerfinances.api.service.ItemService;
 import jakarta.validation.Valid;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,53 +18,51 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(value = "*")
-public class ItemController {
+public class TransactionController {
 
     @Autowired
     private ItemService service;
 
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping("/item/create")
+    @PostMapping("/transactions")
     @ResponseBody
-    public ResponseEntity<Object> createItemObj(@Valid @RequestBody Item itemModel) {
+    public ResponseEntity<Object> createItemObj(@Valid @RequestBody Transaction transactionModel) {
         try {
-            Item item = service.criaItem(itemModel);
-            return ResponseEntity.ok("O item " + item.getNome() + " foi criado com sucesso!");
+            Transaction transaction = service.criaItem(transactionModel);
+            return ResponseEntity.ok(transaction);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @GetMapping("/balanco")
+    @GetMapping("/balance")
     public BigDecimal buscaValores() throws RuntimeException {
-        return service.calculaBalanco();
+        return service.balanceCalculate();
     }
 
     @ResponseStatus(value = HttpStatus.FOUND)
-    @GetMapping("/item/buscaItem/{nome}")
-    public ResponseEntity<Item> buscaItemPeloTitulo(@PathVariable String nome) throws RuntimeException {
+    @GetMapping("/transactions/{nome}")
+    public ResponseEntity<Transaction> getransactionByName(@PathVariable String nome) throws RuntimeException {
         try {
 
-            Item item = service.buscaItemPeloNome(nome);
-            return ResponseEntity.of(Optional.of(item));
+            Transaction transaction = service.getransactionByName(nome);
+            return ResponseEntity.of(Optional.of(transaction));
         } catch (Exception e) {
-            log.error("Error ao buscar o Item: ", e);
+            log.error("Falha ao buscar a transação: ", e);
             throw new ItemNotFoundException(e.getMessage());
         }
 
     }
 
-    @GetMapping("/item/list")
-    public ResponseEntity<Object> listaItem() {
+    @GetMapping("/transactions")
+    public ResponseEntity<Object> getTransactions() {
         try {
-            Set<Object> listaitens;
-
-            listaitens = service.listaItens();
+            Set<Object> listaitens = service.getransactions();
             return ResponseEntity.of(Optional.of(listaitens));
         } catch (Exception e) {
-            log.error("Erro ao Buscar itens " + e);
-            return ResponseEntity.badRequest().body("Erro ao buscar itens " + e.getMessage());
+            log.error("Falha ao buscar transações " + e);
+            return ResponseEntity.badRequest().body("Falha ao buscar transações " + e.getMessage());
         }
 
     }

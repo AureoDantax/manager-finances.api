@@ -14,25 +14,25 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "ITEM", schema = "api")
+@Table( schema = "api")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class Item extends BaseEntity {
+public class Transaction extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @NotBlank(message = "O nome do item é obrigatorio!")
-    private String nome;
+    private String name;
 
     @ManyToOne
-    private Categoria categoria;
+    private Category category;
 
     @NotNull(message = "O valor do item é obrigatorio!")
-    private BigDecimal valor;
+    private BigDecimal value;
 
-    private LocalDate dataRegistro;
+    private LocalDate registerDate;
 }

@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: manager-finances
   datasource:
     url: jdbc:postgresql://cav8p52l9arddb.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com:5432/dce8apmno07bdm
     driverClassName: org.postgresql.Driver

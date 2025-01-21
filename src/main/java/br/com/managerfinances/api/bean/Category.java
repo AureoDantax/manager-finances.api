@@ -31,9 +31,16 @@ public class Category extends BaseEntity {
     @NotBlank(message = "Cor é obrigatória!")
     private String color;
 
+    @NotBlank(message = "É necessário informar a categoria!")
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category categoria;
+
     @NotNull(message = "É necessário informar se a categoria é uma despesa!")
     private Boolean expense;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 
 }

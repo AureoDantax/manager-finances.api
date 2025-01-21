@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table( schema = "api")
+@Table(schema = "api")
 @Getter
 @Setter
 @SuperBuilder
@@ -35,4 +35,8 @@ public class Transaction extends BaseEntity {
     private BigDecimal value;
 
     private LocalDate registerDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

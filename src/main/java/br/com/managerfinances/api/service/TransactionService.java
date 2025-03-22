@@ -52,8 +52,8 @@ public class TransactionService {
         return Map.of("revenues",revenues,"expenses",expenses,"amount",amount);
     }
 
-    private BigDecimal getAmount(BigDecimal revenues, BigDecimal despesas) {
-        return revenues.subtract(despesas);
+    private BigDecimal getAmount(BigDecimal revenues, BigDecimal expenses) {
+        return revenues.subtract(expenses);
     }
 
     private BigDecimal getotalExpenses() {

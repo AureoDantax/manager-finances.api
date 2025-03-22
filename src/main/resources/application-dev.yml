@@ -25,7 +25,7 @@ logging:
     br.com.managerfinances.api: DEBUG
 
 jwt:
-    secret: teste12
+    secret: b4nAVoHag2vgsP9eNAzv3hsfxVUXZ9mRfUt7e6PWjKLcDpgTYqZjZhmNkX2NHnPv
     expiration: 86400000
 google:
   client:

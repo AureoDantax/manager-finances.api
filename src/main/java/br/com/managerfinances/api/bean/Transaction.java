@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -28,11 +29,18 @@ public class Transaction extends BaseEntity {
     @NotBlank(message = "O nome do item é obrigatorio!")
     private String name;
 
-    @ManyToOne
-    private Category category;
-
     @NotNull(message = "O valor do item é obrigatorio!")
     private BigDecimal value;
 
     private LocalDate registerDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @ToString.Exclude
+    private Category category;
 }

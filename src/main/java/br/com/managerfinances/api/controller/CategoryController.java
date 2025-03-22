@@ -3,6 +3,7 @@ package br.com.managerfinances.api.controller;
 
 import br.com.managerfinances.api.bean.Category;
 import br.com.managerfinances.api.exception.BusinessException;
+import br.com.managerfinances.api.exception.CategoryNotFoundException;
 import br.com.managerfinances.api.exception.TransactionNotFoundException;
 import br.com.managerfinances.api.service.CategoryService;
 import jakarta.validation.Valid;
@@ -44,8 +45,8 @@ public class CategoryController {
             Category category = service.getCategoryByName(name);
             return ResponseEntity.of(Optional.of(category));
         } catch (BusinessException e) {
-            log.error("Falha ao buscar a transação: ", e);
-            throw new TransactionNotFoundException(e.getMessage());
+            log.error("Falha ao buscar a categoria: ", e);
+            throw new CategoryNotFoundException(e.getMessage());
         }
 
     }

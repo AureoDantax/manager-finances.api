@@ -20,7 +20,6 @@ public class CategoryService {
         try {
             Category category = Category.builder()
                     .name(categoryModel.getName())
-                    .tag(categoryModel.getTag())
                     .color(categoryModel.getColor())
                     .expense(categoryModel.getExpense())
                     .build();

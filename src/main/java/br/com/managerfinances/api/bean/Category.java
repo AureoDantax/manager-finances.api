@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.UUID;
 
 @Entity
-@Table(schema = "api")
+@Table(name = "categories", schema = "api")
 @Getter
 @Setter
 @SuperBuilder
@@ -24,9 +24,6 @@ public class Category extends BaseEntity {
 
     @NotBlank(message = "Titulo é obrigatório!")
     private String name;
-
-    @NotBlank(message = "Tag é obrigatória!")
-    private String tag;
 
     @NotBlank(message = "Cor é obrigatória!")
     private String color;

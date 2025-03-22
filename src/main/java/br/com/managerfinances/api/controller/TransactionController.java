@@ -1,9 +1,8 @@
 package br.com.managerfinances.api.controller;
 
-import br.com.managerfinances.api.bean.Categoria;
-import br.com.managerfinances.api.bean.Item;
-import br.com.managerfinances.api.exception.ItemNotFoundException;
-import br.com.managerfinances.api.service.ItemService;
+import br.com.managerfinances.api.bean.Transaction;
+import br.com.managerfinances.api.exception.TransactionNotFoundException;
+import br.com.managerfinances.api.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,18 +18,18 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(value = "*")
-public class ItemController {
+public class TransactionController {
 
     @Autowired
-    private ItemService service;
+    private TransactionService service;
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("/item/create")
     @ResponseBody
-    public ResponseEntity<Object> createItemObj(@Valid @RequestBody Item itemModel) {
+    public ResponseEntity<Object> createItemObj(@Valid @RequestBody Transaction transactionModel) {
         try {
-            Item item = service.criaItem(itemModel);
-            return ResponseEntity.ok("O item " + item.getNome() + " foi criado com sucesso!");
+            Transaction transaction = service.createTransaction(transactionModel);
+            return ResponseEntity.ok("O item " + transaction.getName() + " foi criado com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -45,14 +43,14 @@ public class ItemController {
 
     @ResponseStatus(value = HttpStatus.FOUND)
     @GetMapping("/item/buscaItem/{nome}")
-    public ResponseEntity<Item> buscaItemPeloTitulo(@PathVariable String nome) throws RuntimeException {
+    public ResponseEntity<Transaction> buscaItemPeloTitulo(@PathVariable String nome) throws RuntimeException {
         try {
 
-            Item item = service.buscaItemPeloNome(nome);
-            return ResponseEntity.of(Optional.of(item));
+            Transaction transaction = service.getTransactionByName(nome);
+            return ResponseEntity.of(Optional.of(transaction));
         } catch (Exception e) {
             log.error("Error ao buscar o Item: ", e);
-            throw new ItemNotFoundException(e.getMessage());
+            throw new TransactionNotFoundException(e.getMessage());
         }
 
     }

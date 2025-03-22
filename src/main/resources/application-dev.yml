@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: manager-finances
+  datasource:
+    url: jdbc:postgresql://localhost:5432/manager_finances
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode:
+      continue-on-error: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    br.com.managerfinances.api: DEBUG
+
+server:
+  port: 8085

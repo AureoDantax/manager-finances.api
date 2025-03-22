@@ -2,6 +2,8 @@ package br.com.managerfinances.api.controller;
 
 
 import br.com.managerfinances.api.bean.Category;
+import br.com.managerfinances.api.exception.BusinessException;
+import br.com.managerfinances.api.exception.TransactionNotFoundException;
 import br.com.managerfinances.api.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @CrossOrigin("*")
 @RestController
@@ -24,7 +26,7 @@ public class CategoryController {
     private CategoryService service;
 
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping("/categories")
+    @PostMapping
     public ResponseEntity<Object> create(@Valid @RequestBody Category categoryModel) {
         try {
             Category category = service.createCategory(categoryModel);
@@ -34,15 +36,28 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/categories")
-    public ResponseEntity<Object> getCategories(){
+    @ResponseStatus(value = HttpStatus.FOUND)
+    @GetMapping("/{name}")
+    public ResponseEntity<Category> getCategoryByname(@PathVariable String name) throws BusinessException {
         try {
 
-            Set<Category> list = service.getCategories();
+            Category category = service.getCategoryByName(name);
+            return ResponseEntity.of(Optional.of(category));
+        } catch (BusinessException e) {
+            log.error("Falha ao buscar a transação: ", e);
+            throw new TransactionNotFoundException(e.getMessage());
+        }
+
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getCategories() {
+        try {
+            List<Category> list = service.getCategories();
             return ResponseEntity.of(Optional.of(list));
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Falha ao buscar categorias {}", String.valueOf(e));
-        return   ResponseEntity.badRequest().body("Falha ao buscar categorias " + e.getMessage());
+            return ResponseEntity.badRequest().body("Falha ao buscar categorias " + e.getMessage());
         }
 
     }

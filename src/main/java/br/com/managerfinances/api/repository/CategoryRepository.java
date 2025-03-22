@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface CategoryRepository extends CrudRepository<Category, UUID> {
 
-    boolean existsByTag(String tag);
 
-    Optional<Category> findByName(String titulo);
+
+    Optional<Category> findByName(String title);
 }

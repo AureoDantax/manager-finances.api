@@ -2,7 +2,7 @@ package br.com.managerfinances.api.service;
 
 import br.com.managerfinances.api.bean.Category;
 import br.com.managerfinances.api.bean.Transaction;
-import br.com.managerfinances.api.exception.ItemNotFoundException;
+import br.com.managerfinances.api.exception.TransactionNotFoundException;
 import br.com.managerfinances.api.repository.CategoryRepository;
 import br.com.managerfinances.api.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class ItemService {
+public class TransactionService {
 
 
     @Autowired
@@ -23,7 +23,7 @@ public class ItemService {
     CategoryRepository categoryRepository;
 
 
-    public Transaction criaItem(Transaction transactionModel) {
+    public Transaction createTransaction(Transaction transactionModel) {
 
         Optional<Category> categoria = categoryRepository.findById(transactionModel.getCategory().getId());
 
@@ -40,7 +40,7 @@ public class ItemService {
 
     public Transaction getransactionByName(String name) {
         return transactionRepository.findByName(name).orElseThrow(
-                () -> new ItemNotFoundException("Transação não encontrada, tente uma pesquisa diferente"));
+                () -> new TransactionNotFoundException("Transação não encontrada, tente uma pesquisa diferente"));
 
     }
 

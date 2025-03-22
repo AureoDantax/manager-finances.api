@@ -7,10 +7,14 @@ import br.com.managerfinances.api.repository.CategoryRepository;
 import br.com.managerfinances.api.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -44,12 +48,12 @@ public class TransactionService {
 
     }
 
-    public Map<String,BigDecimal> balanceCalculate() {
+    public Map<String, BigDecimal> balanceCalculate() {
 
         BigDecimal revenues = getotalRevenues();
         BigDecimal expenses = getotalExpenses();
         BigDecimal amount = getAmount(revenues, expenses);
-        return Map.of("revenues",revenues,"expenses",expenses,"amount",amount);
+        return Map.of("revenues", revenues, "expenses", expenses, "amount", amount);
     }
 
     private BigDecimal getAmount(BigDecimal revenues, BigDecimal expenses) {
@@ -58,6 +62,9 @@ public class TransactionService {
 
     private BigDecimal getotalExpenses() {
         List<Transaction> itens = new ArrayList<>();
+        if (ObjectUtils.isEmpty(transactionRepository.findAll())) {
+            return BigDecimal.ZERO;
+        }
         transactionRepository.findAll().forEach(itens::add);
         return itens.stream().filter(transaction -> transaction.getCategory().getExpense())
                 .map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -66,20 +73,17 @@ public class TransactionService {
 
     private BigDecimal getotalRevenues() {
         List<Transaction> itens = new ArrayList<>();
+        if (ObjectUtils.isEmpty(transactionRepository.findAll())) {
+            return BigDecimal.ZERO;
+        }
         transactionRepository.findAll().forEach(itens::add);
         return itens.stream().filter(transaction -> !transaction.getCategory().getExpense())
                 .map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public Set<Object> getransactions() {
-        Set<Object> itens = new HashSet<>();
-
-        for (Transaction transaction : transactionRepository.findAll()) {
-            itens.add(transaction);
-
-
-        }
-
+    public List<Object> getransactions() {
+        List<Object> itens = new ArrayList<>();
+        transactionRepository.findAll().forEach(itens::add);
         return itens;
     }
 }

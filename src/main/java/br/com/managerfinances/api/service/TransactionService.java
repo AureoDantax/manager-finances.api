@@ -2,18 +2,22 @@ package br.com.managerfinances.api.service;
 
 import br.com.managerfinances.api.bean.Category;
 import br.com.managerfinances.api.bean.Transaction;
-import br.com.managerfinances.api.exception.ItemNotFoundException;
+import br.com.managerfinances.api.exception.TransactionNotFoundException;
 import br.com.managerfinances.api.repository.CategoryRepository;
 import br.com.managerfinances.api.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
-public class ItemService {
+public class TransactionService {
 
 
     @Autowired
@@ -23,7 +27,7 @@ public class ItemService {
     CategoryRepository categoryRepository;
 
 
-    public Transaction criaItem(Transaction transactionModel) {
+    public Transaction createTransaction(Transaction transactionModel) {
 
         Optional<Category> categoria = categoryRepository.findById(transactionModel.getCategory().getId());
 
@@ -40,19 +44,27 @@ public class ItemService {
 
     public Transaction getransactionByName(String name) {
         return transactionRepository.findByName(name).orElseThrow(
-                () -> new ItemNotFoundException("Transação não encontrada, tente uma pesquisa diferente"));
+                () -> new TransactionNotFoundException("Transação não encontrada, tente uma pesquisa diferente"));
 
     }
 
-    public BigDecimal balanceCalculate() {
+    public Map<String, BigDecimal> balanceCalculate() {
 
         BigDecimal revenues = getotalRevenues();
-        BigDecimal despesas = getotalExpenses();
-        return revenues.subtract(despesas);
+        BigDecimal expenses = getotalExpenses();
+        BigDecimal amount = getAmount(revenues, expenses);
+        return Map.of("revenues", revenues, "expenses", expenses, "amount", amount);
+    }
+
+    private BigDecimal getAmount(BigDecimal revenues, BigDecimal expenses) {
+        return revenues.subtract(expenses);
     }
 
     private BigDecimal getotalExpenses() {
         List<Transaction> itens = new ArrayList<>();
+        if (ObjectUtils.isEmpty(transactionRepository.findAll()) || ObjectUtils.isEmpty(categoryRepository.findAll())) {
+            return BigDecimal.ZERO;
+        }
         transactionRepository.findAll().forEach(itens::add);
         return itens.stream().filter(transaction -> transaction.getCategory().getExpense())
                 .map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -61,20 +73,17 @@ public class ItemService {
 
     private BigDecimal getotalRevenues() {
         List<Transaction> itens = new ArrayList<>();
+        if (ObjectUtils.isEmpty(transactionRepository.findAll()) || ObjectUtils.isEmpty(categoryRepository.findAll())) {
+            return BigDecimal.ZERO;
+        }
         transactionRepository.findAll().forEach(itens::add);
         return itens.stream().filter(transaction -> !transaction.getCategory().getExpense())
                 .map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public Set<Object> getransactions() {
-        Set<Object> itens = new HashSet<>();
-
-        for (Transaction transaction : transactionRepository.findAll()) {
-            itens.add(transaction);
-
-
-        }
-
+    public List<Object> getransactions() {
+        List<Object> itens = new ArrayList<>();
+        transactionRepository.findAll().forEach(itens::add);
         return itens;
     }
 }

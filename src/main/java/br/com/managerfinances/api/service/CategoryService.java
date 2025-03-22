@@ -8,8 +8,7 @@ import br.com.managerfinances.api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -19,18 +18,14 @@ public class CategoryService {
 
     public Category createCategory(Category categoryModel) {
         try {
-            Category categoryCriada = Category.builder()
+            Category category = Category.builder()
                     .name(categoryModel.getName())
-                    .tag(categoryModel.getTag())
                     .color(categoryModel.getColor())
                     .expense(categoryModel.getExpense())
                     .build();
-            if (categoryRepository.existsByTag(categoryModel.getTag())) {
-                throw new RuntimeException("Esse tipo de Categoria já existe");
-            }
 
-            categoryRepository.save(categoryCriada);
-            return categoryCriada;
+            categoryRepository.save(category);
+            return category;
         } catch (Exception e) {
             throw new BusinessException("Um ou mais dados de categoria invalidos");
         }
@@ -42,15 +37,8 @@ public class CategoryService {
                 .orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
     }
 
-    public Set<Category> getCategories() {
-        HashSet<Category> categories = new HashSet<>();
+    public List<Category> getCategories() {
 
-        for (Category category : categoryRepository.findAll()) {
-            categories.add(category);
-
-            
-        }
-
-        return categories;
+        return (List<Category>) categoryRepository.findAll();
     }
 }

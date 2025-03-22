@@ -59,8 +59,8 @@ public class TransactionController {
     @GetMapping("/transactions")
     public ResponseEntity<Object> getTransactions() {
         try {
-            List<Object> listaitens = service.getransactions();
-            return ResponseEntity.of(Optional.of(listaitens));
+            List<Object> transactions = service.getransactions();
+            return ResponseEntity.of(Optional.of(transactions));
         } catch (Exception e) {
             log.error("Falha ao buscar transações " + e);
             return ResponseEntity.badRequest().body("Falha ao buscar transações " + e.getMessage());

@@ -62,7 +62,7 @@ public class TransactionService {
 
     private BigDecimal getotalExpenses() {
         List<Transaction> itens = new ArrayList<>();
-        if (ObjectUtils.isEmpty(transactionRepository.findAll())) {
+        if (ObjectUtils.isEmpty(transactionRepository.findAll()) || ObjectUtils.isEmpty(categoryRepository.findAll())) {
             return BigDecimal.ZERO;
         }
         transactionRepository.findAll().forEach(itens::add);
@@ -73,7 +73,7 @@ public class TransactionService {
 
     private BigDecimal getotalRevenues() {
         List<Transaction> itens = new ArrayList<>();
-        if (ObjectUtils.isEmpty(transactionRepository.findAll())) {
+        if (ObjectUtils.isEmpty(transactionRepository.findAll()) || ObjectUtils.isEmpty(categoryRepository.findAll())) {
             return BigDecimal.ZERO;
         }
         transactionRepository.findAll().forEach(itens::add);

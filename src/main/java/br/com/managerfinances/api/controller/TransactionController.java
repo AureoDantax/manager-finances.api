@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,10 +37,9 @@ public class TransactionController {
         }
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
     @GetMapping("/balance")
-    public BigDecimal getValues() throws BusinessException {
-        return service.balanceCalculate();
+    public ResponseEntity<Map<String,BigDecimal>> getBalance() throws RuntimeException {
+        return ResponseEntity.ok(service.balanceCalculate());
     }
 
     @ResponseStatus(value = HttpStatus.FOUND)
@@ -56,13 +56,13 @@ public class TransactionController {
 
     }
 
-    @GetMapping
+    @GetMapping("/transactions")
     public ResponseEntity<Object> getTransactions() {
         try {
             Set<Object> listaitens = service.getransactions();
             return ResponseEntity.of(Optional.of(listaitens));
-        } catch (BusinessException e) {
-            log.error("Falha ao buscar transações ", e);
+        } catch (Exception e) {
+            log.error("Falha ao buscar transações " + e);
             return ResponseEntity.badRequest().body("Falha ao buscar transações " + e.getMessage());
         }
 

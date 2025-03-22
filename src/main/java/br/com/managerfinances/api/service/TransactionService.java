@@ -44,10 +44,15 @@ public class TransactionService {
 
     }
 
-    public BigDecimal balanceCalculate() {
+    public Map<String,BigDecimal> balanceCalculate() {
 
         BigDecimal revenues = getotalRevenues();
-        BigDecimal despesas = getotalExpenses();
+        BigDecimal expenses = getotalExpenses();
+        BigDecimal amount = getAmount(revenues, expenses);
+        return Map.of("revenues",revenues,"expenses",expenses,"amount",amount);
+    }
+
+    private BigDecimal getAmount(BigDecimal revenues, BigDecimal despesas) {
         return revenues.subtract(despesas);
     }
 

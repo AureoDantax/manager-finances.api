@@ -1,6 +1,7 @@
 package br.com.managerfinances.api.bean;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,10 +27,10 @@ public class Transaction extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "O nome do item é obrigatorio!")
-    private String name;
+    @NotBlank(message = "A descrição é obrigatoria!")
+    private String description;
 
-    @NotNull(message = "O valor do item é obrigatorio!")
+    @NotNull(message = "O valor da transação é obrigatorio!")
     private BigDecimal value;
 
     private LocalDate registerDate;
@@ -37,6 +38,7 @@ public class Transaction extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

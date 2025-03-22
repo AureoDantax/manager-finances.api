@@ -1,8 +1,8 @@
 package br.com.managerfinances.api.bean;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,10 @@ import java.util.UUID;
 @Entity
 @Table(name = "users", schema = "api")
 @Data
-public class User {
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

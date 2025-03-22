@@ -1,6 +1,7 @@
 package br.com.managerfinances.api.controller;
 
 import br.com.managerfinances.api.bean.Transaction;
+import br.com.managerfinances.api.dto.TransactionDTO;
 import br.com.managerfinances.api.exception.BusinessException;
 import br.com.managerfinances.api.exception.TransactionNotFoundException;
 import br.com.managerfinances.api.service.TransactionService;
@@ -31,7 +32,14 @@ public class TransactionController {
     public ResponseEntity<Object> createTransaction(@Valid @RequestBody Transaction transactionModel) {
         try {
             Transaction transaction = service.createTransaction(transactionModel);
-            return ResponseEntity.ok(transaction);
+            var transactionResponse = TransactionDTO.builder()
+                    .id(transaction.getId().toString())
+                    .description(transaction.getDescription())
+                    .value(transaction.getValue())
+                    .date(String.valueOf(transaction.getRegisterDate()))
+                    .category(transaction.getCategory().getName())
+                    .build();
+            return ResponseEntity.ok(transactionResponse);
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -56,10 +64,10 @@ public class TransactionController {
 
     }
 
-    @GetMapping("/transactions")
+    @GetMapping
     public ResponseEntity<Object> getTransactions() {
         try {
-            List<Object> transactions = service.getransactions();
+            List<TransactionDTO> transactions = service.getTransactions();
             return ResponseEntity.of(Optional.of(transactions));
         } catch (Exception e) {
             log.error("Falha ao buscar transações " + e);

@@ -2,9 +2,9 @@ package br.com.managerfinances.api.controller;
 
 
 import br.com.managerfinances.api.bean.Category;
+import br.com.managerfinances.api.dto.CategoryDTO;
 import br.com.managerfinances.api.exception.BusinessException;
 import br.com.managerfinances.api.exception.CategoryNotFoundException;
-import br.com.managerfinances.api.exception.TransactionNotFoundException;
 import br.com.managerfinances.api.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/categories")
 @Slf4j
 public class CategoryController {
 
@@ -38,11 +37,11 @@ public class CategoryController {
     }
 
     @ResponseStatus(value = HttpStatus.FOUND)
-    @GetMapping("/{name}")
-    public ResponseEntity<Category> getCategoryByname(@PathVariable String name) throws BusinessException {
+    @GetMapping("{name}")
+    public ResponseEntity<CategoryDTO> getCategoryByname(@PathVariable String name) throws BusinessException {
         try {
 
-            Category category = service.getCategoryByName(name);
+            CategoryDTO category = service.getCategoryByName(name);
             return ResponseEntity.of(Optional.of(category));
         } catch (BusinessException e) {
             log.error("Falha ao buscar a categoria: ", e);
@@ -54,9 +53,9 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<Object> getCategories() {
         try {
-            List<Category> list = service.getCategories();
+            List<CategoryDTO> list = service.getCategories();
             return ResponseEntity.of(Optional.of(list));
-        } catch (Exception e) {
+        } catch (BusinessException e) {
             log.error("Falha ao buscar categorias {}", String.valueOf(e));
             return ResponseEntity.badRequest().body("Falha ao buscar categorias " + e.getMessage());
         }

@@ -1,5 +1,6 @@
 package br.com.managerfinances.api.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,16 +32,13 @@ public class Category extends BaseEntity {
     @NotBlank(message = "Cor é obrigatória!")
     private String color;
 
-    @NotBlank(message = "É necessário informar a categoria!")
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category categoria;
-
     @NotNull(message = "É necessário informar se a categoria é uma despesa!")
     private Boolean expense;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
